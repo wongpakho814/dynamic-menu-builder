@@ -23,6 +23,10 @@ html {
 .container {
   position: relative;
 }
+
+.show {
+  display: flex !important;
+}
 /* End of reset and common styles */
 
 /* Hamburger menu button */
@@ -183,12 +187,17 @@ html {
 /* End of navbar */
 
 /* Switch role button */
+.dropdown {
+  position: relative;
+  width: 100%;
+  top: 25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .switch-role {
   padding: 0.8rem;
-  position: absolute;
-  top: 25rem;
-  left: 50%;
-  transform: translateX(-50%);
   background-color: #202a44;
   color: #eee;
   font-weight: bold;
@@ -202,6 +211,31 @@ html {
   color: #202a44;
   background-color: #fff;
 }
+
+.dropdown-menu {
+  width: 12.35rem;
+  display: none;
+  position: absolute;
+  top: 3.6rem;
+  flex-direction: column;
+  background-color: #202a44;
+  text-align: center;
+  overflow: auto;
+  box-shadow: 0 0.8rem 1.6rem 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-item {
+  font-size: 1.2rem;
+  color: #fff;
+  padding: 1.2rem 1.6rem;
+  text-decoration: none;
+}
+
+.dropdown a:hover {
+  background-color: #314478;
+}
+
 /* End of switch role button */
 
 /* Responsive */

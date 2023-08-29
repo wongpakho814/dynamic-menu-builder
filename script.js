@@ -25,3 +25,41 @@ document.querySelectorAll(".nav-list-item").forEach((item) => {
   });
 });
 // End of toggle sidebar
+
+// Toggle switch role button
+function roleDropdown() {
+  document.querySelector(".dropdown-menu").classList.toggle("show");
+}
+
+window.onclick = function (event) {
+  if (!event.target.matches(".dropdown-toggle")) {
+    var dropdowns = document.getElementsByClassName("dropdown-menu");
+    for (let i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains("show")) {
+        openDropdown.classList.remove("show");
+      }
+    }
+  }
+};
+// End of toggle switch role button
+
+// Fetching data for the permissionList and systemStatus parameters
+const fetchJSON = (roleId) => {
+  fetch(`https://my-json-server.typicode.com/lapisit/code-test-data/menu-bar-parameters/${roleId}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const permissionList = data.permissionList;
+      const systemStatus = data.systemStatus;
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+
+// Default to roleId = 1
+fetchJSON(1);
+
+// Fetch data everytime switch role button is clicked
+// document.querySelector(".switch-role").addEventListener("click", () => {
+//   fetchJSON(2);
+// });
+// End of data fetching
