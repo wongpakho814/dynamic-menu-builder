@@ -6,7 +6,6 @@
   box-sizing: border-box;
   text-decoration: none;
   list-style-type: none;
-  font-family: "Jost", sans-serif;
   font-weight: 400;
 }
 
@@ -14,12 +13,195 @@ html {
   font-size: 62.5%;
   scroll-behavior: smooth;
 }
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  position: relative;
+}
 /* End of reset and common styles */
 
-/* Navbar */
+/* Hamburger menu button */
+.hamburger-menu {
+  width: 3rem;
+  height: 3rem;
+  position: fixed;
+  top: 2rem;
+  right: 5rem;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  cursor: pointer;
+  transition: right 0.7s;
+  opacity: 0;
+  visibility: hidden;
+}
 
+.change .hamburger-menu {
+  right: 33rem;
+}
+
+.line {
+  width: 100%;
+  height: 0.2rem;
+  background-color: #202a44;
+  box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
+  transition: all 0.5s;
+}
+
+.change .line-1 {
+  transform: rotate(45deg) translate(0.3rem, 0.8rem);
+}
+
+.change .line-2 {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.change .line-3 {
+  transform: rotate(-45deg) translate(0.3rem, -0.8rem);
+}
+/* End of hamburger menu button */
+
+/* Navbar */
+.navbar {
+  width: 100%;
+  height: 4rem;
+  background-color: #202a44;
+  box-shadow: 0.2rem 0.2rem 0.5rem #555;
+  position: absolute;
+  z-index: 300;
+}
+
+.navbar-link {
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: #917153;
+  margin: 0 3rem;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.change.navbar-link {
+  color: #fff;
+}
+
+.navbar-link:hover {
+  color: #fff;
+}
+
+.navbar-link::before {
+  content: "";
+  width: 0;
+  height: 0.2rem;
+  background-color: #fff;
+  position: absolute;
+  left: -15%;
+  bottom: -0.3rem;
+  transition: width 0.2s;
+}
+
+.change.navbar-link::before {
+  width: 130%;
+}
+
+.navbar-link:hover::before {
+  width: 130%;
+}
 /* End of navbar */
 
-/* Responsive */
+/* Switch role button */
+.switch-role {
+  padding: 0.8rem;
+  position: absolute;
+  top: 15rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #202a44;
+  color: #eee;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
 
+.switch-role:hover {
+  color: #202a44;
+  background-color: #fff;
+}
+/* End of switch role button */
+
+/* Responsive */
+@media screen and (max-width: 1200px) {
+  .hamburger-menu {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .change .line {
+    background-color: #fff;
+  }
+
+  .navbar {
+    width: 40rem;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: -40rem;
+    background-color: #202a44;
+    transition: right 0.5s;
+    z-index: 100;
+  }
+
+  .change .navbar {
+    right: 0;
+  }
+
+  .nav-list {
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    justify-content: space-evenly;
+    flex-direction: column;
+    transform: translate(-50%, -50%);
+  }
+
+  .nav-list-item {
+    text-align: center;
+  }
+
+  .navbar-link {
+    font-size: 2.5rem;
+    position: relative;
+  }
+
+  .navbar-link:hover {
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .navbar-link {
+    margin: 0 2rem;
+    font-size: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  html {
+    font-size: 45%;
+  }
+
+  .navbar-link {
+    margin: 0 1.5rem;
+  }
+}
 /* End of responsive */
