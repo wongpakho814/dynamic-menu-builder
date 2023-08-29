@@ -87,7 +87,8 @@ const fetchJSON = async (roleId) => {
         systemStatusList.push(key);
       }
     }
-
+    
+    // Process and render the menu
     processData();
     renderMenu();
   } catch (error) {
@@ -129,8 +130,26 @@ const filterMenuToBeRender = () => {
 
 // Render the menu
 const renderMenu = () => {
+  const navList = document.querySelector(".nav-list");
+
   filterMenuToBeRender();
-  console.log(menuToBeRendered);
+
+  menuList.forEach((level1Menu) => {
+    if (menuToBeRendered.includes(level1Menu)) {
+      // Render the level 1 menu
+      const navListItem = document.createElement("li");
+      navListItem.classList.add("nav-list-item");
+      const textNode = document.createTextNode(level1Menu);
+      
+      const navbarLink = document.createElement('a');
+      navbarLink.classList.add("navbar-link");
+      navbarLink.href = '#';
+
+      navbarLink.appendChild(textNode);
+      navListItem.appendChild(navbarLink);
+      navList.appendChild(navListItem);
+    }
+  });
 };
 
 // Default to roleId = 1
