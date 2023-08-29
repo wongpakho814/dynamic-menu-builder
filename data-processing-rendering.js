@@ -1,12 +1,13 @@
-// Creating a dictionary to store the list of menu, permission and system status
-const menuDict = {
-  menu_1: ["menu_1_1", "menu_1_2"],
-  menu_2: ["menu_2_1", "menu_2_2", "menu_2_3", "menu_2_4"],
-  menu_3: ["menu_3_1", "menu_3_2"],
-  menu_4: ["menu_4_1", "menu_4_2", "menu_4_3"],
-  menu_5: ["menu_5_1", "menu_5_2", "menu_5_3"],
-  
-};
+// Creating an array or dictionary to store the list of menu, permission and system status
+const menuList = [
+  "menu_1",
+  "menu_2",
+  "menu_3",
+  "menu_4",
+  "menu_5",
+  "menu_6",
+  "menu_7",
+];
 
 const permissionDict = {
   PERMISSION_1: ["menu_5_2", "menu_5_3"],
@@ -113,18 +114,24 @@ const processData = () => {
       }
     });
   });
-  console.log(menuToBeRendered);
-}
+};
 
 // If level 2 menu is permitted but not the level 1 menu, remove the corresponding level 2 menu
 const filterMenuToBeRender = () => {
-
-}
+  menuList.forEach((level1Menu) => {
+    // If for example menuToBeRendered contains "menu_1_1" but not "menu_1", remove all "menu_1_1" or entries that follow that regex
+    if (!menuToBeRendered.includes(level1Menu)) {
+      let regex = new RegExp(`^${level1Menu}_\\d+$`); // Regex for "menu_1_1", "menu_1_2" etc with "menu_1" being the prefix
+      menuToBeRendered = menuToBeRendered.filter(menu => !regex.test(menu))
+    }
+  });
+};
 
 // Render the menu
 const renderMenu = () => {
   filterMenuToBeRender();
-}
+  console.log(menuToBeRendered);
+};
 
 // Default to roleId = 1
 fetchJSON(1);
