@@ -93,7 +93,8 @@ html {
   color: #fff;
 }
 
-.navbar-link:hover {
+.navbar-link:hover,
+.nav-dropdown-item a:hover {
   color: #fff;
 }
 
@@ -115,13 +116,77 @@ html {
 .navbar-link:hover::before {
   width: 130%;
 }
+
+.nav-dropdown-wrapper {
+  width: 100%;
+  height: 7rem;
+  position: absolute;
+  top: 4rem;
+  left: 0;
+  padding: 0 10rem;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: #314478;
+  z-index: 1;
+  cursor: auto;
+}
+
+.nav-list,
+.nav-list-item {
+  height: 100%;
+}
+
+.nav-list-item {
+  display: flex;
+  align-items: center;
+}
+
+.nav-list-item:hover .nav-dropdown-wrapper {
+  animation: fade-in 0.3s forwards;
+}
+
+.nav-dropdown {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.nav-dropdown-item {
+  display: flex;
+}
+
+.nav-dropdown-item a {
+  color: var(--text, #b8994b);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
+}
 /* End of navbar */
 
 /* Switch role button */
 .switch-role {
   padding: 0.8rem;
   position: absolute;
-  top: 15rem;
+  top: 25rem;
   left: 50%;
   transform: translateX(-50%);
   background-color: #202a44;
@@ -152,7 +217,7 @@ html {
 
   .navbar {
     width: 40rem;
-    height: 100vh;
+    height: 100%;
     position: fixed;
     top: 0;
     right: -40rem;
@@ -163,6 +228,11 @@ html {
 
   .change .navbar {
     right: 0;
+  }
+
+  .navbar-link {
+    font-size: 2.5rem;
+    position: relative;
   }
 
   .nav-list {
@@ -176,32 +246,50 @@ html {
   }
 
   .nav-list-item {
+    font-size: 2.5rem;
     text-align: center;
   }
 
-  .navbar-link {
+  .change2.nav-dropdown-wrapper {
+    left: -62%;
+    right: unset;
+  }
+
+  .nav-list-item a {
+    color: #917153;
+  }
+
+  .nav-dropdown-wrapper {
+    height: 100vh;
+    width: 40rem;
+    top: 0;
+    padding: 0;
+    background-color: #202a44;
+    opacity: 1;
+    visibility: visible;
+    left: unset;
+    right: -51rem;
+  }
+
+  .nav-dropdown {
+    height: 100%;
+    flex-direction: column;
+  }
+
+  .nav-dropdown-item a {
     font-size: 2.5rem;
-    position: relative;
-  }
-
-  .navbar-link:hover {
+    margin: 0 3rem;
   }
 }
 
-@media screen and (max-width: 600px) {
-  .navbar-link {
-    margin: 0 2rem;
-    font-size: 1.5rem;
-  }
-}
-
-@media screen and (max-width: 450px) {
-  html {
-    font-size: 45%;
+@media screen and (max-width: 400px) {
+  .hamburger-menu,
+  .change .hamburger-menu {
+    right: 3rem;
   }
 
-  .navbar-link {
-    margin: 0 1.5rem;
+  .navbar {
+    width: 100%;
   }
 }
 /* End of responsive */
