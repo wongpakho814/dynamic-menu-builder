@@ -51,6 +51,7 @@ const fetchJSON = (roleId) => {
     .then((data) => {
       const permissionList = data.permissionList;
       const systemStatus = data.systemStatus;
+      console.log(permissionList, systemStatus);
     })
     .catch((error) => console.error("Error fetching data:", error));
 }
@@ -59,7 +60,9 @@ const fetchJSON = (roleId) => {
 fetchJSON(1);
 
 // Fetch data everytime switch role button is clicked
-// document.querySelector(".switch-role").addEventListener("click", () => {
-//   fetchJSON(2);
-// });
+document.querySelectorAll(".dropdown-item").forEach((item) => {
+  item.addEventListener("click", function () {
+    fetchJSON(this.dataset.roleid);
+  });
+});
 // End of data fetching
