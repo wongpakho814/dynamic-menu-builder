@@ -1,4 +1,13 @@
-// Creating a dictionary to store the list of permission and system status
+// Creating a dictionary to store the list of menu, permission and system status
+const menuDict = {
+  menu_1: ["menu_1_1", "menu_1_2"],
+  menu_2: ["menu_2_1", "menu_2_2", "menu_2_3", "menu_2_4"],
+  menu_3: ["menu_3_1", "menu_3_2"],
+  menu_4: ["menu_4_1", "menu_4_2", "menu_4_3"],
+  menu_5: ["menu_5_1", "menu_5_2", "menu_5_3"],
+  
+};
+
 const permissionDict = {
   PERMISSION_1: ["menu_5_2", "menu_5_3"],
   PERMISSION_2: ["menu_7", "menu_7_1"],
@@ -53,27 +62,69 @@ window.onclick = function (event) {
 };
 // End of toggle switch role button
 
-// Fetching data for the permissionList and systemStatus parameters
+// Fetching data for the permissionList and systemStatus parameters and process them
 var permissionList = [];
 var systemStatusList = [];
+var menuToBeRendered = [];
 
-const fetchJSON = (roleId) => {
-  fetch(`https://my-json-server.typicode.com/lapisit/code-test-data/menu-bar-parameters/${roleId}`)
-    .then((response) => response.json())
-    .then((data) => {
-      permissionList = data.permissionList;
-      const systemStatus = data.systemStatus;
+const fetchJSON = async (roleId) => {
+  permissionList = [];
+  systemStatusList = [];
+  menuToBeRendered = [];
 
-      // Push the system status returning true to the systemStatusList array 
-      for (const [key, value] of Object.entries(systemStatus)) {
-        if (value === true) {
-          systemStatusList.push(key);
-        }
+  try {
+    const res = await fetch(
+      `https://my-json-server.typicode.com/lapisit/code-test-data/menu-bar-parameters/${roleId}`
+    );
+    let obj = await res.json();
+    permissionList = obj.permissionList;
+    const systemStatus = obj.systemStatus;
+
+    // Push the system status returning true to the systemStatusList array
+    for (const [key, value] of Object.entries(systemStatus)) {
+      if (value === true) {
+        systemStatusList.push(key);
       }
-      console.log(permissionList);
-    })
-    .catch((error) => console.error("Error fetching data:", error));
+    }
+
+    processData();
+    renderMenu();
+  } catch (error) {
+    console.error(error);
+  }
 };
+
+// Process the data
+const processData = () => {
+  // Add and compress all menus with permission into an array
+  let permissionMenu = [];
+
+  permissionList.forEach((item) => {
+    if (permissionDict[item] !== undefined) {
+      permissionMenu = permissionMenu.concat(permissionDict[item]);
+    }
+  });
+
+  // Add menu to menuToBeRendered array if it is present in both permissionMenu AND corresponding column in systemStatusDict
+  systemStatusList.forEach((stat) => {
+    systemStatusDict[stat].forEach((menu) => {
+      if (permissionMenu.includes(menu)) {
+        menuToBeRendered.push(menu);
+      }
+    });
+  });
+  console.log(menuToBeRendered);
+}
+
+// If level 2 menu is permitted but not the level 1 menu, remove the corresponding level 2 menu
+const filterMenuToBeRender = () => {
+
+}
+
+// Render the menu
+const renderMenu = () => {
+  filterMenuToBeRender();
+}
 
 // Default to roleId = 1
 fetchJSON(1);
@@ -84,8 +135,4 @@ document.querySelectorAll(".dropdown-item").forEach((item) => {
     fetchJSON(this.dataset.roleid);
   });
 });
-// End of data fetching
-
-// Data processing
-
-// End of data processing
+// End of data processing and rendering
