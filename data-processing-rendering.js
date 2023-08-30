@@ -1,5 +1,5 @@
 // Creating an array or dictionary to store the list of menu, permission and system status
-const menuList = [
+const level1MenuList = [
   "menu_1",
   "menu_2",
   "menu_3",
@@ -87,7 +87,7 @@ const fetchJSON = async (roleId) => {
         systemStatusList.push(key);
       }
     }
-    
+
     // Process and render the menu
     processData();
     renderMenu();
@@ -117,39 +117,103 @@ const processData = () => {
   });
 };
 
-// If level 2 menu is permitted but not the level 1 menu, remove the corresponding level 2 menu
+/*
+ * If level 2 menu is permitted but not the level 1 menu, remove the corresponding level 2 menu. And if any level 1 menu
+ * does not contain level 2 menu, remove that level 1 menu
+ */
 const filterMenuToBeRender = () => {
-  menuList.forEach((level1Menu) => {
+  // Filtering level 2 menu
+  level1MenuList.forEach((level1Menu) => {
     // If for example menuToBeRendered contains "menu_1_1" but not "menu_1", remove all "menu_1_1" or entries that follow that regex
     if (!menuToBeRendered.includes(level1Menu)) {
-      let regex = new RegExp(`^${level1Menu}_\\d+$`); // Regex for "menu_1_1", "menu_1_2" etc with "menu_1" being the prefix
-      menuToBeRendered = menuToBeRendered.filter(menu => !regex.test(menu))
+      let regex = new RegExp(`^${level1Menu}_\\d+$`); // Regex for "menu_1_1", "menu_1_2" etc with "menu_{n}" being the prefix
+      menuToBeRendered = menuToBeRendered.filter((menu) => !regex.test(menu));
     }
   });
+
+  console.log(menuToBeRendered);
+
+  // Filtering level 1 menu, for example if patterns like [..."menu_1", "menu_2",...] exist, remove "menu_1"
+  let regex = new RegExp(`^menu_\\d+$`); // // Regex for "menu_1", "menu_2" etc
+
+  for (let i = 0; i < menuToBeRendered.length - 1; i++) {
+    if (
+      regex.test(menuToBeRendered[i]) &&
+      regex.test(menuToBeRendered[i + 1])
+    ) {
+      menuToBeRendered.splice(i, 1);
+    }
+  }
+
+  // if the array length is only 1, that means no level 2 menu exists and thus nothing should be rendered
+  if (menuToBeRendered.length === 1) {
+    menuToBeRendered.pop();
+  }
+
+  console.log(menuToBeRendered);
 };
 
 // Render the menu
 const renderMenu = () => {
+  // Reset content in <ul class="nav-list"> for each render
   const navList = document.querySelector(".nav-list");
+  navList.innerHTML = "";
 
   filterMenuToBeRender();
 
-  menuList.forEach((level1Menu) => {
-    if (menuToBeRendered.includes(level1Menu)) {
-      // Render the level 1 menu
-      const navListItem = document.createElement("li");
-      navListItem.classList.add("nav-list-item");
-      const textNode = document.createTextNode(level1Menu);
-      
-      const navbarLink = document.createElement('a');
-      navbarLink.classList.add("navbar-link");
-      navbarLink.href = '#';
+  if (menuToBeRendered.length !== 0) {
+    level1MenuList.forEach((level1Menu) => {
+      if (menuToBeRendered.includes(level1Menu)) {
+        renderLevel1Menu(level1Menu, navList);
+      }
+    });
+  }
+};
 
-      navbarLink.appendChild(textNode);
-      navListItem.appendChild(navbarLink);
-      navList.appendChild(navListItem);
+// Render level 1 menu
+const renderLevel1Menu = (menu, navList) => {
+  const navListItem = document.createElement("li");
+  navListItem.classList.add("nav-list-item");
+  const textNode = document.createTextNode(menu);
+
+  const navbarLink = document.createElement("a");
+  navbarLink.classList.add("navbar-link");
+  navbarLink.href = "#";
+
+  navbarLink.appendChild(textNode);
+  navListItem.appendChild(navbarLink);
+  renderLevel2Menu(navListItem, menu);
+  navList.appendChild(navListItem);
+};
+
+// Render level 2 menu
+const renderLevel2Menu = (navListItem, level1Menu) => {
+  const navDropdownWrapper = document.createElement("div");
+  navDropdownWrapper.classList.add("nav-dropdown-wrapper");
+
+  const navDropdown = document.createElement("ul");
+  navDropdown.classList.add("nav-dropdown");
+
+  let regex = new RegExp(`^${level1Menu}_\\d+$`); // Regex for "menu_1_1", "menu_1_2" etc with "menu_{n}" being the prefix
+
+  // For example, if level1Menu = "menu_1", find and renders all menu with regex "menu_1_{n}" in menuToBeRendered
+  menuToBeRendered.forEach((menu) => {
+    if (regex.test(menu)) {
+      const navDropdownItem = document.createElement("li");
+      navDropdownItem.classList.add("nav-dropdown-item");
+
+      const navLink = document.createElement("a");
+      const textNode = document.createTextNode(menu);
+      navLink.href = "#";
+
+      navLink.appendChild(textNode);
+      navDropdownItem.appendChild(navLink);
+      navDropdown.appendChild(navDropdownItem);
     }
   });
+
+  navDropdownWrapper.appendChild(navDropdown);
+  navListItem.appendChild(navDropdownWrapper);
 };
 
 // Default to roleId = 1
