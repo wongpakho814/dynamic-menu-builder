@@ -11,41 +11,41 @@ const level1MenuList = [
 
 const permissionDict = {
   PERMISSION_1: ["menu_5_2", "menu_5_3"],
-  PERMISSION_2: ["menu_7", "menu_7_1"],
-  PERMISSION_3: ["menu_2", "menu_2_1"],
+  PERMISSION_2: ["menu_7_1"],
+  PERMISSION_3: ["menu_2_1"],
   PERMISSION_4: ["menu_2_2", "menu_6_2"],
-  PERMISSION_6: ["menu_1", "menu_1_1", "menu_1_2"],
-  PERMISSION_8: ["menu_3", "menu_3_1"],
+  PERMISSION_6: ["menu_1_1", "menu_1_2"],
+  PERMISSION_8: ["menu_3_1"],
   PERMISSION_12: ["menu_7_3"],
-  PERMISSION_13: ["menu_5", "menu_5_1"],
+  PERMISSION_13: ["menu_5_1"],
   PERMISSION_14: ["menu_2_3"],
   PERMISSION_15: ["menu_2_4"],
   PERMISSION_16: ["menu_7_2"],
-  PERMISSION_17: ["menu_6", "menu_6_1"],
+  PERMISSION_17: ["menu_6_1"],
   PERMISSION_18: ["menu_4_2"],
   PERMISSION_19: ["menu_4_3"],
-  PERMISSION_26: ["menu_4", "menu_4_1"],
+  PERMISSION_26: ["menu_4_1"],
   PERMISSION_28: ["menu_3_2"],
 };
 
 const systemStatusDict = {
-  SYSTEM_CONTROL_1: ["menu_6", "menu_6_1", "menu_6_2"],
-  SYSTEM_CONTROL_2: ["menu_1", "menu_1_1", "menu_1_2"],
-  SYSTEM_CONTROL_3: ["menu_2", "menu_2_1"],
+  SYSTEM_CONTROL_1: ["menu_6_1", "menu_6_2"],
+  SYSTEM_CONTROL_2: ["menu_1_1", "menu_1_2"],
+  SYSTEM_CONTROL_3: ["menu_2_1"],
   SYSTEM_CONTROL_4: ["menu_2_3"],
   SYSTEM_CONTROL_5: ["menu_2_2"],
-  SYSTEM_CONTROL_6: ["menu_7", "menu_7_1"],
+  SYSTEM_CONTROL_6: ["menu_7_1"],
   SYSTEM_CONTROL_7: ["menu_7_2"],
   SYSTEM_CONTROL_8: ["menu_3_2"],
-  SYSTEM_CONTROL_9: ["menu_4", "menu_4_1"],
+  SYSTEM_CONTROL_9: ["menu_4_1"],
   SYSTEM_CONTROL_10: ["menu_7_3"],
   SYSTEM_CONTROL_12: ["menu_2_4"],
-  SYSTEM_CONTROL_14: ["menu_5", "menu_5_1"],
+  SYSTEM_CONTROL_14: ["menu_5_1"],
   SYSTEM_CONTROL_15: ["menu_5_2"],
   SYSTEM_CONTROL_16: ["menu_5_3"],
 };
 
-// Toggle switch role button
+// Toggle dropdown for switch role button
 function roleDropdown() {
   document.querySelector(".dropdown-menu").classList.toggle("show");
 }
@@ -61,7 +61,7 @@ window.onclick = function (event) {
     }
   }
 };
-// End of toggle switch role button
+// End of toggle dropdown for switch role button
 
 // Fetching data for the permissionList and systemStatus parameters and process them
 var permissionList = [];
@@ -101,6 +101,7 @@ const processData = () => {
   // Add and compress all menus with permission into an array
   let permissionMenu = [];
 
+  // Look up permissionDict and add the corresponding menu in permissionList to permissionMenu
   permissionList.forEach((item) => {
     if (permissionDict[item] !== undefined) {
       permissionMenu = permissionMenu.concat(permissionDict[item]);
@@ -117,55 +118,32 @@ const processData = () => {
   });
 };
 
-/*
- * If level 2 menu is permitted but not the level 1 menu, remove the corresponding level 2 menu. And if any level 1 menu
- * does not contain level 2 menu, remove that level 1 menu
- */
-const filterMenuToBeRender = () => {
-  // Filtering level 2 menu
-  level1MenuList.forEach((level1Menu) => {
-    // If for example menuToBeRendered contains "menu_1_1" but not "menu_1", remove all "menu_1_1" or entries that follow that regex
-    if (!menuToBeRendered.includes(level1Menu)) {
-      let regex = new RegExp(`^${level1Menu}_\\d+$`); // Regex for "menu_1_1", "menu_1_2" etc with "menu_{n}" being the prefix
-      menuToBeRendered = menuToBeRendered.filter((menu) => !regex.test(menu));
-    }
-  });
-
-  // Filtering level 1 menu, for example if patterns like [..."menu_1", "menu_2",...] exist, remove "menu_1"
-  let regex = new RegExp(`^menu_\\d+$`); // // Regex for "menu_1", "menu_2" etc
-
-  for (let i = 0; i < menuToBeRendered.length - 1; i++) {
-    if (
-      regex.test(menuToBeRendered[i]) &&
-      regex.test(menuToBeRendered[i + 1])
-    ) {
-      menuToBeRendered.splice(i, 1);
-    }
-  }
-
-  // if the array length is only 1, that means no level 2 menu exists and thus nothing should be rendered
-  if (menuToBeRendered.length === 1) {
-    menuToBeRendered.pop();
-  }
-};
-
 // Render the menu
 const renderMenu = () => {
   // Reset content in <ul class="nav-list"> for each render
   const navList = document.querySelector(".nav-list");
   navList.innerHTML = "";
 
-  filterMenuToBeRender();
-
   if (menuToBeRendered.length !== 0) {
     level1MenuList.forEach((level1Menu) => {
-      if (menuToBeRendered.includes(level1Menu)) {
+      // Check if the current level 1 menu contains level 2 menu to be rendered
+      let regex = new RegExp(`^${level1Menu}_\\d+$`); // Regex for "menu_1_1", "menu_1_2" etc with "menu_{n}" being the prefix
+      let hasSubMenu = false;
+
+      for (let i = 0; i < menuToBeRendered.length; i++) {
+        if (regex.test(menuToBeRendered[i])) {
+          hasSubMenu = true;
+          break;
+        }
+      } 
+
+      if (hasSubMenu) {
         setTimeout(() => {
           renderLevel1Menu(level1Menu, navList);
         }, "500");
       }
     });
-  // Let the user knows he/she is not permitted to view any menu
+  // Elseet the user knows he/she is not permitted to view any menu
   } else {
     const navListItem = document.createElement("li");
     navListItem.classList.add("nav-list-item");
