@@ -131,8 +131,6 @@ const filterMenuToBeRender = () => {
     }
   });
 
-  console.log(menuToBeRendered);
-
   // Filtering level 1 menu, for example if patterns like [..."menu_1", "menu_2",...] exist, remove "menu_1"
   let regex = new RegExp(`^menu_\\d+$`); // // Regex for "menu_1", "menu_2" etc
 
@@ -149,8 +147,6 @@ const filterMenuToBeRender = () => {
   if (menuToBeRendered.length === 1) {
     menuToBeRendered.pop();
   }
-
-  console.log(menuToBeRendered);
 };
 
 // Render the menu
@@ -164,10 +160,28 @@ const renderMenu = () => {
   if (menuToBeRendered.length !== 0) {
     level1MenuList.forEach((level1Menu) => {
       if (menuToBeRendered.includes(level1Menu)) {
-        renderLevel1Menu(level1Menu, navList);
+        setTimeout(() => {
+          renderLevel1Menu(level1Menu, navList);
+        }, "500");
       }
     });
+  // Let the user knows he/she is not permitted to view any menu
+  } else {
+    const navListItem = document.createElement("li");
+    navListItem.classList.add("nav-list-item");
+
+    const navbarLink = document.createElement("p");
+    navbarLink.classList.add("navbar-link");
+    navbarLink.classList.add("non-clickable");
+
+    const textNode = document.createTextNode("No menu can be rendered!");
+
+    navbarLink.appendChild(textNode);
+    navListItem.appendChild(navbarLink);
+    navList.appendChild(navListItem);
   }
+
+  reRenderSidebarLevel2Menu();
 };
 
 // Render level 1 menu

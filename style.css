@@ -27,6 +27,10 @@ html {
 .show {
   display: flex !important;
 }
+
+.non-clickable {
+  pointer-events: none;
+}
 /* End of reset and common styles */
 
 /* Hamburger menu button */
